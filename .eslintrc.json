@@ -1,0 +1,8 @@
+{
+  "overrides": [
+    {
+      "files": ["tailwind.config.js"],
+      "excludedFiles": "*.js"
+    }
+  ]
+}
