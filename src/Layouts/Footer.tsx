@@ -1,7 +1,7 @@
 function Footer() {
   return (
-    <div>
-      <p>&copy; Copyright @2023</p>
+    <div className="mt-20">
+      <p className="text-center">&copy; Copyright @2023</p>
     </div>
   );
 }

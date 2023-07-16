@@ -6,7 +6,7 @@ function MainLayout() {
   return (
     <div>
       <Navbar />
-      <div>
+      <div className="pt-16">
         <Outlet />
       </div>
       <Footer />
