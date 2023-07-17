@@ -4,7 +4,7 @@ export type IBook = {
   author: string;
   genre: string;
   publicationDate: string;
-  reviews?: [rating?: number, comment?: string];
+  reviews?: [{ rating?: number; comment?: string }];
   addedBy: string;
 };
 

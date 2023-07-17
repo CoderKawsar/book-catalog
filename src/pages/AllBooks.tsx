@@ -10,9 +10,9 @@ const AllBooks = () => {
 
   return (
     <div className="my-12">
-      <h1 className="text-2xl font-semibold mb-8 ml-12 text-center">
+      <h2 className="text-2xl font-semibold mb-8 ml-12 text-center">
         All Books
-      </h1>
+      </h2>
       <div className="mx-12">
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {books?.map(
