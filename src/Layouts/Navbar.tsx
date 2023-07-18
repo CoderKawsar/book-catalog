@@ -14,7 +14,7 @@ function Navbar() {
         <NavLink className="px-4 pr-2 hover:text-orange-400" to="/">
           Home
         </NavLink>
-        <NavLink className="px-4 py-2 hover:text-orange-400" to="/all-books">
+        <NavLink className="px-4 py-2 hover:text-orange-400" to="/books">
           All Books
         </NavLink>
         <NavLink className="px-4 py-2 hover:text-orange-400" to="/login">

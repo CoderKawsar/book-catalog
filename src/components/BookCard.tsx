@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { IBook } from "../interfaces/book";
+import { Link } from "react-router-dom";
 
 const BookCard = ({ book }: { book: IBook }) => {
-  const { title, author, genre, publicationDate, reviews } = book;
+  const { _id, title, author, genre, publicationDate, reviews } = book;
   const [averageRating, setAverageRating] = useState(0);
 
   // form publication date
@@ -28,29 +29,32 @@ const BookCard = ({ book }: { book: IBook }) => {
   }, [reviews]);
 
   return (
-    <div className="max-w-md w-full bg-white shadow-md rounded-md p-6">
-      <h2 className="text-xl font-semibold mb-2">
-        <span>{title}</span>
-      </h2>
-      <p className="mb-2">
-        Author: <span className="text-gray-600">{author}</span>
-      </p>
-      <p className="mb-2">
-        Genre: <span className="text-gray-600">{genre}</span>
-      </p>
-      <p className="mb-2">
-        Publication Date: <span className="text-gray-600">{formattedDate}</span>
-      </p>
+    <Link to={`/books/${_id}`}>
+      <div className="max-w-md w-full bg-white shadow-md rounded-md p-6">
+        <h2 className="text-xl font-semibold mb-2">
+          <span>{title}</span>
+        </h2>
+        <p className="mb-2">
+          Author: <span className="text-gray-600">{author}</span>
+        </p>
+        <p className="mb-2">
+          Genre: <span className="text-gray-600">{genre}</span>
+        </p>
+        <p className="mb-2">
+          Publication Date:{" "}
+          <span className="text-gray-600">{formattedDate}</span>
+        </p>
 
-      <div className="flex items-center">
-        <p className="mr-2">Review Rating:</p>
-        <div className="flex">
-          <span className="text-gray-600">
-            {averageRating ? averageRating : "No rating yet"}
-          </span>
+        <div className="flex items-center">
+          <p className="mr-2">Review Rating:</p>
+          <div className="flex">
+            <span className="text-gray-600">
+              {averageRating ? averageRating : "No rating yet"}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

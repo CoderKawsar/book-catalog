@@ -2,16 +2,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import BookCard from "../components/BookCard";
 import { IBook } from "../interfaces/book";
-import { useGetBooksQuery } from "../redux/features/book/bookApi";
 
-const AllBooks = () => {
-  const { data } = useGetBooksQuery(undefined);
-  const books: IBook[] = (data?.data || []) as IBook[];
+interface Props {
+  books: IBook[];
+}
 
+const BooksComponent = ({ books }: Props) => {
   return (
-    <div className="my-12">
-      <h2 className="text-2xl font-semibold mb-8 ml-12 text-center">
-        All Books
+    <div>
+      <h2 className="text-2xl font-semibold mb-8 ml-12 text-center uppercase">
+        Books
       </h2>
       <div className="mx-12">
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
@@ -24,4 +24,4 @@ const AllBooks = () => {
   );
 };
 
-export default AllBooks;
+export default BooksComponent;

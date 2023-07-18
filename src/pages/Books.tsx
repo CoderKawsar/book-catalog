@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import BooksComponent from "../components/Books";
 import { IBook } from "../interfaces/book";
 import { useGetBooksQuery } from "../redux/features/book/bookApi";
+import BooksComponent from "../components/Books";
 
-function Home() {
+const Books = () => {
   const { data } = useGetBooksQuery(undefined);
   const books: IBook[] = (data?.data || []) as IBook[];
-  return (
-    <div className="my-12">
-      {books.length ? <BooksComponent books={books} /> : "No data found!"}
-    </div>
-  );
-}
 
-export default Home;
+  return (
+    <div className="my-12">{books && <BooksComponent books={books} />}</div>
+  );
+};
+
+export default Books;

@@ -1,21 +1,23 @@
+import { IBook } from "../../../interfaces/book";
 import { api } from "../../api/apiSlice";
 
 type BookPayload = {
   title: string;
   author: string;
   genre: string;
-  publicationDate: Date;
+  publicationDate: string;
   reviews?: string[];
   addedBy: string;
 };
 
 const bookApi = api.injectEndpoints({
   endpoints: (build) => ({
-    getBooks: build.query({
+    getBooks: build.query<IBook[], string>({
       query: () => "/books",
     }),
     getSingleBook: build.query({
-      query: (id: string) => `/books/${id}`,
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      query: (_id) => `/books/${_id}`,
     }),
     postBook: build.mutation({
       query: (data: BookPayload) => ({
