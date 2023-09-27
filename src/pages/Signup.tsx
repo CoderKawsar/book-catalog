@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -9,8 +12,47 @@ const Signup = () => {
 
   const handleSignup = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log("Signup data:", { firstName, lastName, email, password });
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    const url = "http://localhost:5000/api/v1/users/signup";
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: { firstName, lastName },
+        email,
+        password,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // Handle unsuccessful response here
+          return response.json().then((errorData) => {
+            alert(errorData.message);
+          });
+        }
+
+        // Handle successful form submission here
+        toast.success("Signup successful!");
+
+        // Clear form fields after successful signup
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+      })
+      .catch((error) => {
+        toast.error("Error occurred!");
+      });
   };
 
   return (

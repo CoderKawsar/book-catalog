@@ -5,11 +5,15 @@ import { useGetBooksQuery } from "../redux/features/book/bookApi";
 import BooksComponent from "../components/Books";
 
 const Books = () => {
-  const { data } = useGetBooksQuery(undefined);
+  const { data, isLoading, isError } = useGetBooksQuery(undefined);
   const books: IBook[] = (data?.data || []) as IBook[];
 
   return (
-    <div className="my-12">{books && <BooksComponent books={books} />}</div>
+    <div className="my-12">
+      {books && (
+        <BooksComponent books={books} isLoading={isLoading} isError={isError} />
+      )}
+    </div>
   );
 };
 

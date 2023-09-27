@@ -1,13 +1,54 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: { preventDefault: () => void }) => {
+  const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     // Handle login logic here
-    console.log("Login data:", { email, password });
+    try {
+      const url = "http://localhost:5000/api/v1/users/login";
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle unsuccessful response here
+        const errorData = await response.json();
+        alert(errorData.message);
+        return;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      Cookies.set(
+        "book-catalog-access-token",
+        data?.data?.accessToken as string
+      );
+
+      // Handle successful form submission here
+      toast.success("Login successful");
+      // Clear form fields after successful signup
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      alert("Error occurred!");
+      // Handle other errors, if any
+    }
   };
 
   return (
