@@ -8,13 +8,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e: { preventDefault: () => void }) => {
+  const handleLogin = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    // Handle login logic here
     try {
       const url = "http://localhost:5000/api/v1/users/login";
 
-      const response = await fetch(url, {
+      fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,28 +22,33 @@ const Login = () => {
           email,
           password,
         }),
-      });
+      })
+        .then((response) => {
+          if (!response.ok) {
+            // Handle unsuccessful response here
+            return response.json().then((errorData) => {
+              alert(errorData.message);
+            });
+          }
 
-      const data = await response.json();
+          return response.json();
+        })
+        .then((data) => {
+          Cookies.set(
+            "book-catalog-access-token",
+            data?.data?.accessToken as string
+          );
 
-      if (!response.ok) {
-        // Handle unsuccessful response here
-        const errorData = await response.json();
-        alert(errorData.message);
-        return;
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      Cookies.set(
-        "book-catalog-access-token",
-        data?.data?.accessToken as string
-      );
-
-      // Handle successful form submission here
-      toast.success("Login successful");
-      // Clear form fields after successful signup
-      setEmail("");
-      setPassword("");
+          // Handle successful form submission here
+          toast.success("Login successful");
+          // Clear form fields after successful signup
+          setEmail("");
+          setPassword("");
+        })
+        .catch((error) => {
+          alert("Error occurred!");
+          // Handle other errors, if any
+        });
     } catch (error) {
       alert("Error occurred!");
       // Handle other errors, if any

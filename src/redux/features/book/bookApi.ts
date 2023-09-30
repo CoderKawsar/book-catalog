@@ -12,7 +12,7 @@ type BookPayload = {
 
 const bookApi = api.injectEndpoints({
   endpoints: (build) => ({
-    getBooks: build.query<IBook[], string>({
+    getBooks: build.query({
       query: () => "/books",
     }),
     getSingleBook: build.query({

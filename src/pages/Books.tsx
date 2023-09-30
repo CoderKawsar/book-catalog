@@ -7,7 +7,6 @@ import BooksComponent from "../components/Books";
 const Books = () => {
   const { data, isLoading, isError } = useGetBooksQuery(undefined);
   const books: IBook[] = (data?.data || []) as IBook[];
-
   return (
     <div className="my-12">
       {books && (

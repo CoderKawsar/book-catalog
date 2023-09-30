@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import auth from "../firebase.init";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -10,56 +10,46 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignup = (e: { preventDefault: () => void }) => {
+  const handleSignup = async (e: {
+    preventDefault: () => void;
+  }): Promise<void> => {
     e.preventDefault();
 
-    // Check if passwords match
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+    try {
+      if (password === confirmPassword) {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        // Update the user's profile with the display name
+        await updateProfile(userCredential.user, {
+          displayName: `${firstName} ${lastName}`,
+        });
 
-    const url = "http://localhost:5000/api/v1/users/signup";
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: { firstName, lastName },
-        email,
-        password,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          // Handle unsuccessful response here
-          return response.json().then((errorData) => {
-            alert(errorData.message);
-          });
-        }
-
-        // Handle successful form submission here
         toast.success("Signup successful!");
 
-        // Clear form fields after successful signup
+        // Clearing form fields after successful signup
         setFirstName("");
         setLastName("");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
-      })
-      .catch((error) => {
-        toast.error("Error occurred!");
-      });
+      } else {
+        toast.error("Passwords don't match!");
+        setPassword("");
+        setConfirmPassword("");
+      }
+    } catch (error) {
+      toast.error("Error occured!");
+    }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full px-6 py-8 bg-white shadow-md rounded-md">
         <h2 className="text-3xl text-center font-semibold mb-6">Sign Up</h2>
-        <form onSubmit={handleSignup}>
+        <form onSubmit={(e) => void handleSignup(e)}>
           <div className="mb-4">
             <label htmlFor="name" className="block font-medium mb-1">
               Name

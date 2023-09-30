@@ -5,11 +5,15 @@ import { IBook } from "../interfaces/book";
 import { useGetBooksQuery } from "../redux/features/book/bookApi";
 
 function Home() {
-  const { data } = useGetBooksQuery(undefined);
+  const { data, isLoading, isError } = useGetBooksQuery(undefined);
   const books: IBook[] = (data?.data || []) as IBook[];
   return (
     <div className="my-12">
-      {books.length ? <BooksComponent books={books} /> : "No data found!"}
+      {books.length ? (
+        <BooksComponent books={books} isLoading={isLoading} isError={isError} />
+      ) : (
+        "No data found!"
+      )}
     </div>
   );
 }
