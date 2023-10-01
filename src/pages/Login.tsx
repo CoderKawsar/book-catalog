@@ -1,57 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import auth from "../firebase.init";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = (e: { preventDefault: () => void }) => {
+  const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+
     try {
-      const url = "http://localhost:5000/api/v1/users/login";
+      await signInWithEmailAndPassword(auth, email, password);
 
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            // Handle unsuccessful response here
-            return response.json().then((errorData) => {
-              alert(errorData.message);
-            });
-          }
-
-          return response.json();
-        })
-        .then((data) => {
-          Cookies.set(
-            "book-catalog-access-token",
-            data?.data?.accessToken as string
-          );
-
-          // Handle successful form submission here
-          toast.success("Login successful");
-          // Clear form fields after successful signup
-          setEmail("");
-          setPassword("");
-        })
-        .catch((error) => {
-          alert("Error occurred!");
-          // Handle other errors, if any
-        });
+      toast.success("Login successful!");
+      navigate("/");
     } catch (error) {
-      alert("Error occurred!");
-      // Handle other errors, if any
+      toast.error("Error occured!");
     }
   };
 
@@ -59,7 +26,7 @@ const Login = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full px-6 py-8 bg-white shadow-md rounded-md">
         <h2 className="text-3xl text-center font-semibold mb-6">Login</h2>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={(e) => void handleLogin(e)}>
           <div className="mb-4">
             <label htmlFor="email" className="block font-medium mb-1">
               Email
