@@ -1,13 +1,21 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  AuthError,
+} from "firebase/auth";
 import auth from "../firebase.init";
 import { useNavigate } from "react-router-dom";
+import googleIcon from "../../src/assets/img/google.svg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const provider = new GoogleAuthProvider();
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -18,7 +26,26 @@ const Login = () => {
       toast.success("Login successful!");
       navigate("/");
     } catch (error) {
-      toast.error("Error occured!");
+      const authError = error as AuthError;
+
+      console.log(authError.code);
+      console.log(authError.message);
+
+      if (authError.code === "auth/invalid-login-credentials") {
+        toast.error("Invalid login credentials");
+      } else {
+        toast.error("Error occured!");
+      }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, provider);
+      toast.success("Successfully signed in with Google");
+      navigate("/");
+    } catch (error) {
+      toast.error("Google sign-in error");
     }
   };
 
@@ -57,11 +84,18 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
+            className="w-full py-2 px-4 font-medium bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
           >
             Login
           </button>
         </form>
+      </div>
+      <div
+        onClick={() => void handleGoogleSignIn()}
+        className="max-w-md w-full my-12 px-4 py-2 bg-cyan-700 shadow-md rounded-md hover:bg-blue-600 transition-colors duration-300 flex justify-center items-center cursor-pointer"
+      >
+        <img src={googleIcon} alt="" height={30} width={30} />
+        <p className="ml-4 text-white font-medium">Sign in with google</p>
       </div>
     </div>
   );

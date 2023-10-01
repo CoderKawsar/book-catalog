@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import auth from "../firebase.init";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -9,6 +10,8 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSignup = async (e: {
     preventDefault: () => void;
@@ -35,6 +38,7 @@ const Signup = () => {
         setEmail("");
         setPassword("");
         setConfirmPassword("");
+        navigate("/");
       } else {
         toast.error("Passwords don't match!");
         setPassword("");
