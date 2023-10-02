@@ -31,7 +31,7 @@ function Navbar() {
   }, []);
 
   return (
-    <nav className="flex justify-between px-20 py-4 w-full bg-gray-50 h-16 fixed top z-10">
+    <nav className="flex items-center justify-between px-20 py-4 w-full bg-gray-50 h-16 fixed top z-10">
       <div>
         <Link to="/">
           <img className="h-10" src={logo} alt="" />
@@ -54,12 +54,20 @@ function Navbar() {
             </NavLink>
           </>
         ) : (
-          <button
-            className="px-4 py-2 hover:text-orange-400"
-            onClick={() => void handleSignOut()}
-          >
-            Logout
-          </button>
+          <>
+            <NavLink
+              className="px-4 py-2 hover:text-orange-400"
+              to="/add-new-book"
+            >
+              Add New Book
+            </NavLink>
+            <button
+              className="px-4 py-2 hover:text-orange-400"
+              onClick={() => void handleSignOut()}
+            >
+              Logout
+            </button>
+          </>
         )}
       </div>
     </nav>

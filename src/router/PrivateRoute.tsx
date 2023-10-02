@@ -1,12 +1,17 @@
-import { ReactNode } from "react";
-import Cookies from "js-cookie";
+import { Navigate, useLocation } from "react-router-dom";
+import auth from "../firebase.init";
 
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = auth.currentUser;
+  const location = useLocation();
 
-function PrivateRoute({ children }: { children: ReactNode }) {
-    const token: string = Cookies.get('book-catalog-access-token') as string;
+  if (!user) {
+    // not logged in so redirect to login page with the return url
+    return <Navigate to="/login" state={{ from: location }} />;
+  }
 
-    const decodedToken = jwt.verify(token, secretKey);
-  return <div>{children}</div>;
-}
+  // authorized so return child components
+  return children;
+};
 
 export default PrivateRoute;

@@ -1,4 +1,3 @@
-import { IBook } from "../../../interfaces/book";
 import { api } from "../../api/apiSlice";
 
 type BookPayload = {

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import auth from "../firebase.init";
 import { useNavigate } from "react-router-dom";
+import GoogleSignIn from "../components/GoogleSignIn";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -129,6 +130,7 @@ const Signup = () => {
           </button>
         </form>
       </div>
+      <GoogleSignIn />
     </div>
   );
 };

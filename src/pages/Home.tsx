@@ -9,11 +9,7 @@ function Home() {
   const books: IBook[] = (data?.data || []) as IBook[];
   return (
     <div className="my-12">
-      {books.length ? (
-        <BooksComponent books={books} isLoading={isLoading} isError={isError} />
-      ) : (
-        "No data found!"
-      )}
+      <BooksComponent books={books} isLoading={isLoading} isError={isError} />
     </div>
   );
 }
