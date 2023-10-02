@@ -9,7 +9,9 @@ import { IBook } from "../interfaces/book";
 
 function EditBook() {
   const { id } = useParams<{ id: string }>();
+
   const navigate = useNavigate();
+
   const [editedBook, setEditedBook] = useState({
     title: "",
     author: "",

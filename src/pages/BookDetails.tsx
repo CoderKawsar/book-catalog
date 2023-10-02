@@ -11,12 +11,16 @@ import ErrorComponent from "../components/ErrorComponent";
 import { toast } from "react-toastify";
 import DeleteConfirmationDialog from "../components/DeleteConfirmationDialogue";
 import ReviewForm from "../components/ReviewForm";
+import auth from "../firebase.init";
 
 function BookDetails() {
   const { id } = useParams<{ id: string }>();
+  const currentUserEmail = auth.currentUser?.email;
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+
   const [averageRating, setAverageRating] = useState(0);
   const [deleteBook] = useDeleteBookMutation();
+
   const navigate = useNavigate();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -52,16 +56,23 @@ function BookDetails() {
 
   const handleDeleteBook = async () => {
     try {
-      await deleteBook(id as string);
-      toast.error("Book deleted!");
-      navigate("/books");
+      if (book.addedBy === currentUserEmail) {
+        await deleteBook(id as string);
+        toast.error("Book deleted!");
+        navigate("/books");
+      } else {
+        toast.error("Unauthorized! You can't delete this book.");
+        setShowConfirmationDialog(false);
+      }
     } catch (error) {
       toast.error("Delete failed!");
     }
   };
 
   const goToEditPage = () => {
-    navigate(`/books/${id as string}/edit`);
+    if (book.addedBy !== currentUserEmail) {
+      toast.error("Unauthorized! You can't edit this book!!!");
+    } else navigate(`/books/${id as string}/edit`);
   };
 
   // Ensure that reviews have valid Review objects
