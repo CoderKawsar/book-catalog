@@ -13,10 +13,10 @@ const bookApi = api.injectEndpoints({
   endpoints: (build) => ({
     getBooks: build.query({
       query: () => "/books",
+      providesTags: ["Book"],
     }),
     getSingleBook: build.query({
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      query: (_id) => `/books/${_id}`,
+      query: (_id: string) => `/books/${_id}`,
     }),
     postBook: build.mutation({
       query: (data: BookPayload) => ({
@@ -24,6 +24,7 @@ const bookApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Book"],
     }),
     editBook: build.mutation({
       query: ({ id, ...bookData }: { id: string; [key: string]: any }) => ({
@@ -31,6 +32,14 @@ const bookApi = api.injectEndpoints({
         method: "PATCH",
         body: bookData,
       }),
+      invalidatesTags: ["Book"],
+    }),
+    deleteBook: build.mutation({
+      query: (id: string) => ({
+        url: `/books/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Book"],
     }),
   }),
 });
@@ -40,4 +49,5 @@ export const {
   useGetSingleBookQuery,
   usePostBookMutation,
   useEditBookMutation,
+  useDeleteBookMutation,
 } = bookApi;
