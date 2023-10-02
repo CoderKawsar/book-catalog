@@ -3,21 +3,26 @@ import {
   useDeleteBookMutation,
   useGetSingleBookQuery,
 } from "../redux/features/book/bookApi";
-import { IBook } from "../interfaces/book";
+import { IBook, Review } from "../interfaces/book";
 import { useEffect, useState } from "react";
 import Reviews from "../components/Reviews";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorComponent from "../components/ErrorComponent";
 import { toast } from "react-toastify";
+import DeleteConfirmationDialog from "../components/DeleteConfirmationDialogue";
+import ReviewForm from "../components/ReviewForm";
 
 function BookDetails() {
   const { id } = useParams<{ id: string }>();
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [averageRating, setAverageRating] = useState(0);
   const [deleteBook] = useDeleteBookMutation();
   const navigate = useNavigate();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data, isLoading, isError, error } = useGetSingleBookQuery(id);
+  const { data, isLoading, isError, error } = useGetSingleBookQuery(
+    id as string
+  );
 
   const book: IBook | undefined = (data as { data: IBook })?.data;
 
@@ -33,10 +38,12 @@ function BookDetails() {
   useEffect(() => {
     if (book?.reviews?.length) {
       // Calculate the sum of ratings
-      const sumOfRatings = book?.reviews?.reduce(
-        (sum, review) => sum + review?.rating,
-        0
-      );
+      const sumOfRatings = book?.reviews?.reduce((sum, review) => {
+        if (review?.rating !== undefined) {
+          return sum + review.rating;
+        }
+        return sum;
+      }, 0);
 
       // Calculate the average rating
       setAverageRating(sumOfRatings / book?.reviews?.length);
@@ -45,13 +52,23 @@ function BookDetails() {
 
   const handleDeleteBook = async () => {
     try {
-      await deleteBook(id || "");
-      toast.success("Book deleted!");
+      await deleteBook(id as string);
+      toast.error("Book deleted!");
       navigate("/books");
     } catch (error) {
       toast.error("Delete failed!");
     }
   };
+
+  const goToEditPage = () => {
+    navigate(`/books/${id as string}/edit`);
+  };
+
+  // Ensure that reviews have valid Review objects
+  const validReviews: Review[] = (book?.reviews || []).map((review) => ({
+    rating: review.rating || 0, // Provide a default value if needed
+    comment: review.comment || "", // Provide a default value if needed
+  }));
 
   return (
     <div>
@@ -86,27 +103,38 @@ function BookDetails() {
               </div>
             </div>
             <div>
-              {book && averageRating ? (
-                <Reviews reviews={book?.reviews} />
+              {book && book?.reviews ? (
+                <Reviews reviews={validReviews} />
               ) : (
                 <></>
               )}
             </div>
+            <ReviewForm book={book} />
           </div>
           <div className="flex flex-col gap-4 items-end">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            <button
+              onClick={goToEditPage}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            >
               Edit Book
             </button>
             <button
-              onClick={() => void handleDeleteBook()}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              onClick={() => setShowConfirmationDialog(true)}
+              className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-md"
             >
               Delete Book
             </button>
+
+            {showConfirmationDialog && (
+              <DeleteConfirmationDialog
+                onCancel={() => setShowConfirmationDialog(false)}
+                onConfirm={handleDeleteBook}
+              />
+            )}
           </div>
         </div>
       )}
-      {!isLoading && isError && <ErrorComponent message={error?.message} />}
+      {!isLoading && error && <ErrorComponent message="Error Occured!" />}
     </div>
   );
 }

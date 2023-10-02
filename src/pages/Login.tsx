@@ -3,10 +3,12 @@ import { toast } from "react-toastify";
 import { signInWithEmailAndPassword, AuthError } from "firebase/auth";
 import auth from "../firebase.init";
 import GoogleSignIn from "../components/GoogleSignIn";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -15,6 +17,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
 
       toast.success("Login successful!");
+      navigate("/");
     } catch (error) {
       const authError = error as AuthError;
 

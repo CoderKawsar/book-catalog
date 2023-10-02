@@ -4,9 +4,15 @@ export type IBook = {
   author: string;
   genre: string;
   publicationDate: string;
-  reviews?: [{ rating?: number; comment?: string }];
+  reviews?: [{ reviewerEmail?: string; rating?: number; comment?: string }];
   addedBy: string;
 };
+
+export interface Review {
+  reviewerEmail?: string;
+  rating: number;
+  comment: string;
+}
 
 export type IBooksResponse = {
   statusCode: number;

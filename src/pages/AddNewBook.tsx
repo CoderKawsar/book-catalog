@@ -32,6 +32,8 @@ const AddNewBook: React.FC = () => {
       });
       await AddNewBook(book);
 
+      console.log(book.publicationDate);
+
       toast.success("Book added!");
     } catch (error) {
       toast.error("Error occured!");
