@@ -11,7 +11,7 @@ function GoogleSignIn() {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, provider);
-      toast.success("Successfully signed in with Google");
+      toast.success("Signed in with Google");
       navigate("/");
     } catch (error) {
       toast.error("Google sign-in error");
