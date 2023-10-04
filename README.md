@@ -15,7 +15,7 @@ A way for users to create new accounts with a unique email and password. Also, t
   - Genre
   - Publication Date
 
-- In all books page a search bar that allows users to search for books based on criteria such as title, author, or genre.
+- There is a search bar on top that allows users to search for books based on criteria such as title, author, or genre.
 
 - Filtering options in the side of the search bar to narrow down the book list based on genre & publication year.
 
