@@ -24,14 +24,18 @@ const ReviewForm = ({ book }: { book: IBook }) => {
     };
 
     try {
-      await editBook({
-        id: book._id,
-        ...updatedBook,
-      }).unwrap();
+      if (currentUserEmail) {
+        await editBook({
+          id: book._id,
+          ...updatedBook,
+        }).unwrap();
 
-      toast.success("Review added!");
-      setRating(5);
-      setComment("");
+        toast.success("Review added!");
+        setRating(5);
+        setComment("");
+      } else {
+        toast.info("Login first!");
+      }
     } catch (error) {
       toast.error("Error occurred!");
     }

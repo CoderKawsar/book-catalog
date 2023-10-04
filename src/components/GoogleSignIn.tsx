@@ -15,6 +15,7 @@ function GoogleSignIn() {
       await signInWithPopup(auth, provider);
       const currentUserEmail = auth.currentUser?.email as string;
       await signUpUser({ email: currentUserEmail });
+      localStorage.setItem("isAuth", "authenticated");
       toast.success("Signed in with Google");
       navigate("/");
     } catch (error) {
