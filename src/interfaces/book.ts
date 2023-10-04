@@ -25,3 +25,15 @@ export type IBooksResponse = {
   };
   data: IBook;
 };
+
+export type ApiResponse<T> = {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data: T;
+};
+
+export type BookListResponse = ApiResponse<{
+  success: boolean;
+  message: string;
+}>;

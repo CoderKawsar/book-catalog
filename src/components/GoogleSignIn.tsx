@@ -3,14 +3,18 @@ import auth from "../firebase.init";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import googleIcon from "../assets/img/google.svg";
+import { useSignUpUserMutation } from "../redux/features/user/userApi";
 
 function GoogleSignIn() {
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
+  const [signUpUser] = useSignUpUserMutation();
 
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, provider);
+      const currentUserEmail = auth.currentUser?.email as string;
+      await signUpUser({ email: currentUserEmail });
       toast.success("Signed in with Google");
       navigate("/");
     } catch (error) {

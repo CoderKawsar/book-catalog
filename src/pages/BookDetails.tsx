@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useDeleteBookMutation,
@@ -152,7 +154,7 @@ function BookDetails() {
             {showConfirmationDialog && (
               <DeleteConfirmationDialog
                 onCancel={() => setShowConfirmationDialog(false)}
-                onConfirm={handleDeleteBook}
+                onConfirm={() => void handleDeleteBook()}
               />
             )}
           </div>

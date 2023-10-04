@@ -1,12 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { toast } from "react-toastify";
 import {
   useAddBookToFinishedReadingMutation,
   useAddBookToReadingMutation,
   useAddBookToWishListMutation,
-  useGetUserByEmailQuery,
 } from "../redux/features/user/userApi";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "./LoadingSpinner";
+import { BookListResponse } from "../interfaces/book";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 function AddToWishListReadingFinished({
   userEmail,
@@ -26,12 +31,16 @@ function AddToWishListReadingFinished({
 
   useEffect(() => {
     if (user) {
-      const existInWishlist = user.wishList.find((book) => book._id === bookId);
-      const existInReading = user.booksReading.find(
-        (book) => book._id === bookId
+      const existInWishlist = user.wishList.find(
+        (book: any) => book._id === bookId
       );
+
+      const existInReading = user.booksReading.find(
+        (book: any) => book._id === bookId
+      );
+
       const existInFinishedReading = user.finishedReading.find(
-        (book) => book._id === bookId
+        (book: any) => book._id === bookId
       );
 
       if (existInWishlist) {
@@ -46,16 +55,30 @@ function AddToWishListReadingFinished({
     }
   }, [user, bookId]);
 
+  const showToastBasedOnResponse = (
+    response:
+      | { data: { data: BookListResponse } }
+      | { error: FetchBaseQueryError | SerializedError }
+  ) => {
+    if ("data" in response) {
+      const message = response?.data?.data?.message;
+
+      if (response?.data?.data?.success) {
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    }
+  };
+
   const handleAddToWishList = async () => {
     try {
-      const response = await addToWishList({ userEmail, bookId });
+      const response:
+        | { data: { data: BookListResponse } }
+        | { error: FetchBaseQueryError | SerializedError } =
+        await addToWishList({ userEmail, bookId });
 
-      const errorMessage = response?.data?.data?.message;
-      if (errorMessage) {
-        toast.error(errorMessage as string);
-      } else {
-        toast.success("Added to wishlist!");
-      }
+      showToastBasedOnResponse(response);
     } catch (error) {
       toast.error("Error occurred!");
     }
@@ -63,14 +86,13 @@ function AddToWishListReadingFinished({
 
   const handleAddToReading = async () => {
     try {
-      const response = await addToReading({ userEmail, bookId });
+      const response:
+        | { data: { data: BookListResponse } }
+        | { error: FetchBaseQueryError | SerializedError } = await addToReading(
+        { userEmail, bookId }
+      );
 
-      const errorMessage = response?.data?.data?.message;
-      if (errorMessage) {
-        toast.error(errorMessage as string);
-      } else {
-        toast.success("Added to reading list!");
-      }
+      showToastBasedOnResponse(response);
     } catch (error) {
       toast.error("Error occurred!");
     }
@@ -78,14 +100,12 @@ function AddToWishListReadingFinished({
 
   const handleAddToFinishedReading = async () => {
     try {
-      const response = await addToFinishedReading({ userEmail, bookId });
+      const response:
+        | { data: { data: BookListResponse } }
+        | { error: FetchBaseQueryError | SerializedError } =
+        await addToFinishedReading({ userEmail, bookId });
 
-      const errorMessage = response?.data?.data?.message;
-      if (errorMessage) {
-        toast.error(errorMessage as string);
-      } else {
-        toast.success("Added to finished reading book!");
-      }
+      showToastBasedOnResponse(response);
     } catch (error) {
       toast.error("Error occurred!");
     }
