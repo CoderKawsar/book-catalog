@@ -9,7 +9,14 @@ function Home() {
   const books: IBook[] = (data?.data || []) as IBook[];
   return (
     <div className="my-12">
-      <BooksComponent books={books} isLoading={isLoading} isError={isError} />
+      <h2 className="text-2xl font-semibold mb-8 ml-12 text-center uppercase">
+        Books
+      </h2>
+      <BooksComponent
+        books={books.slice(0, 10)}
+        isLoading={isLoading}
+        isError={isError}
+      />
     </div>
   );
 }

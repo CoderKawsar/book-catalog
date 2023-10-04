@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import DeleteConfirmationDialog from "../components/DeleteConfirmationDialogue";
 import ReviewForm from "../components/ReviewForm";
 import auth from "../firebase.init";
+import AddToWishListReadingFinished from "../components/AddToWishListReadingFinished";
+import { useGetUserByEmailQuery } from "../redux/features/user/userApi";
 
 function BookDetails() {
   const { id } = useParams<{ id: string }>();
@@ -22,6 +24,9 @@ function BookDetails() {
   const [deleteBook] = useDeleteBookMutation();
 
   const navigate = useNavigate();
+
+  const { data: userData } = useGetUserByEmailQuery(currentUserEmail as string);
+  const user = userData?.data;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { data, isLoading, isError, error } = useGetSingleBookQuery(
@@ -93,6 +98,7 @@ function BookDetails() {
                 Book Name:
                 <span className="text-gray-500"> {book?.title}</span>
               </h2>
+
               <p className="mb-2 text-lg">
                 Author: <span className="text-gray-500">{book?.author}</span>
               </p>
@@ -113,6 +119,13 @@ function BookDetails() {
                 </div>
               </div>
             </div>
+            {user && (
+              <AddToWishListReadingFinished
+                userEmail={currentUserEmail as string}
+                bookId={book?._id}
+                user={user}
+              />
+            )}
             <div>
               {book && book?.reviews ? (
                 <Reviews reviews={validReviews} />

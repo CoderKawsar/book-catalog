@@ -2,34 +2,59 @@ import { api } from "../../api/apiSlice";
 
 const userApi = api.injectEndpoints({
   endpoints: (build) => ({
+    signUpUser: build.mutation({
+      query: (data: { email: string }) => ({
+        url: `/users/signup`,
+        method: "POST",
+        body: data,
+      }),
+    }),
     getUserByEmail: build.query({
       query: (email: string) => `/users/${email}`,
       providesTags: ["User"],
     }),
 
     addBookToWishList: build.mutation({
-      query: ({ email, bookId }: { email: string; bookId: string }) => ({
+      query: ({
+        userEmail,
+        bookId,
+      }: {
+        userEmail: string;
+        bookId: string;
+      }) => ({
         url: "/users/add-book-to-wishlist",
         method: "PATCH",
-        body: { email, bookId },
+        body: { userEmail, bookId },
       }),
       invalidatesTags: ["User"],
     }),
 
     addBookToReading: build.mutation({
-      query: ({ email, bookId }: { email: string; bookId: string }) => ({
+      query: ({
+        userEmail,
+        bookId,
+      }: {
+        userEmail: string;
+        bookId: string;
+      }) => ({
         url: "/users/add-book-to-reading",
         method: "PATCH",
-        body: { email, bookId },
+        body: { userEmail, bookId },
       }),
       invalidatesTags: ["User"],
     }),
 
     addBookToFinishedReading: build.mutation({
-      query: ({ email, bookId }: { email: string; bookId: string }) => ({
-        url: "/users/add-to-book-finished-reading",
+      query: ({
+        userEmail,
+        bookId,
+      }: {
+        userEmail: string;
+        bookId: string;
+      }) => ({
+        url: "/users/add-book-to-finished-reading",
         method: "PATCH",
-        body: { email, bookId },
+        body: { userEmail, bookId },
       }),
       invalidatesTags: ["User"],
     }),
@@ -37,6 +62,7 @@ const userApi = api.injectEndpoints({
 });
 
 export const {
+  useSignUpUserMutation,
   useGetUserByEmailQuery,
   useAddBookToWishListMutation,
   useAddBookToReadingMutation,

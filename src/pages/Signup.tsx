@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import auth from "../firebase.init";
 import { useNavigate } from "react-router-dom";
 import GoogleSignIn from "../components/GoogleSignIn";
+import { useSignUpUserMutation } from "../redux/features/user/userApi";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -13,6 +14,8 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
+
+  const [signUpUser] = useSignUpUserMutation();
 
   const handleSignup = async (e: {
     preventDefault: () => void;
@@ -30,6 +33,8 @@ const Signup = () => {
         await updateProfile(userCredential.user, {
           displayName: `${firstName} ${lastName}`,
         });
+
+        await signUpUser({ email });
 
         toast.success("Signup successful!");
 

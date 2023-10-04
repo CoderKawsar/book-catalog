@@ -14,9 +14,6 @@ interface Props {
 const BooksComponent = ({ books, isLoading, isError }: Props) => {
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-8 ml-12 text-center uppercase">
-        Books
-      </h2>
       {isLoading && !isError && <LoadingSpinner />}
       {!isLoading && !isError && (
         <div className="mx-12">
