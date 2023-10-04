@@ -1,5 +1,12 @@
 ### Live Link: https://musical-puffpuff-75dfc3.netlify.app/
 
+### One user credentials:
+
+<b>Email: </b>test@user.com
+<b>Password: </b>123456
+
+### Description:
+
 A simple and clean landing page for a book catalog system using React and redux . The landing have a header, a list of the top 10 recently added books and a footer. Open Routes such are "All Books", "Sign In", and "Sign Up".
 
 ### Login Page and Registration Page: ( Firebase authentication)
